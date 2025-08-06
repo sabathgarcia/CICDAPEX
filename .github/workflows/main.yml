@@ -24,9 +24,11 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y unzip wget
-        wget https://download.oracle.com/sqlcl/sqlcl-latest.zip -O sqlcl.zip
+        wget --no-cookies --no-check-certificate \
+             --header "Cookie: oraclelicense=accept-securebackup-cookie" \
+             https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-24.2.1.087.1256.zip -O sqlcl.zip
         unzip -q sqlcl.zip -d sqlcl
-      shell: bash
+      shell: bash  
 
     - name: Download and unzip Wallet
       run: |
