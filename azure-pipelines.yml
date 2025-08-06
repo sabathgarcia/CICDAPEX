@@ -1,0 +1,42 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  TNS_ADMIN: '$(Agent.TempDirectory)/wallet'
+  DB_ALIAS: 'demodevopsapex'
+  DB_USER: 'SABATH.GARCIA'
+  DB_PASSWORD: $(db_password)  # Variable secreta desde Variable Group
+
+steps:
+# Paso 1: Instalar Java y SQLcl
+- script: |
+    sudo apt-get update
+    sudo apt-get install -y unzip wget
+    wget https://download.oracle.com/sqlcl/sqlcl-latest.zip -O sqlcl.zip
+    unzip -q sqlcl.zip -d $(Agent.ToolsDirectory)/sqlcl
+  displayName: 'Instalar SQLcl'
+
+# Paso 2: Descargar y descomprimir wallet
+- task: DownloadSecureFile@1
+  name: downloadWallet
+  inputs:
+    secureFile: 'Wallet_DemoDevOpsApex.zip'
+
+- script: |
+    mkdir -p $(TNS_ADMIN)
+    unzip -o $(downloadWallet.secureFilePath) -d $(TNS_ADMIN)
+  displayName: 'Descomprimir Wallet'
+
+# Paso 3: Ejecutar script en Oracle ADB
+- script: |
+    export PATH=$(Agent.ToolsDirectory)/sqlcl/sqlcl/bin:$PATH
+    echo exit | sql -s $(DB_USER)/$(DB_PASSWORD)@$(DB_ALIAS) @EMPLOYEES.sql
+  displayName: 'Ejecutar script en Oracle ADB'
