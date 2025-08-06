@@ -10,10 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      TNS_ADMIN: ${{ runner.temp }}/wallet
+      TNS_ADMIN: ${{ github.workspace }}/wallet
       DB_ALIAS: demodevopsapex
       DB_USER: SABATH.GARCIA
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      SQLCL_DIR: ${{ github.workspace }}/sqlcl
 
     steps:
     - name: Checkout repository
@@ -24,17 +25,17 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y unzip wget
         wget https://download.oracle.com/sqlcl/sqlcl-latest.zip -O sqlcl.zip
-        unzip -q sqlcl.zip -d ${{ runner.tool_cache }}/sqlcl
+        unzip -q sqlcl.zip -d sqlcl
       shell: bash
 
     - name: Download and unzip Wallet
       run: |
-        mkdir -p "${{ env.TNS_ADMIN }}"
-        unzip -o wallet.zip -d "${{ env.TNS_ADMIN }}"
+        mkdir -p "${TNS_ADMIN}"
+        unzip -o wallet.zip -d "${TNS_ADMIN}"
       shell: bash
 
     - name: Run SQL script on Oracle ADB
       run: |
-        export PATH=${{ runner.tool_cache }}/sqlcl/sqlcl/bin:$PATH
+        export PATH=${SQLCL_DIR}/sqlcl/bin:$PATH
         echo exit | sql -s "${DB_USER}/${DB_PASSWORD}@${DB_ALIAS}" @EMPLOYEES.sql
       shell: bash
