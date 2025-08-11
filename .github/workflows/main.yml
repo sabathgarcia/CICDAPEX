@@ -41,3 +41,14 @@ jobs:
         export PATH=${SQLCL_DIR}/sqlcl/bin:$PATH
         echo exit | sql -s ${DB_USER}/${DB_PASSWORD}@${DB_ALIAS} @EMPLOYEES.sql
       shell: bash
+
+    - name: Run SQL script on Oracle ADB
+      run: |
+        export PATH="${SQLCL_DIR}/sqlcl/bin:$PATH"
+        sql -s "\"${DB_USER}\"/${DB_PASSWORD}@${DB_ALIAS}" @EMPLOYEES.sql
+      env:
+        TNS_ADMIN: ${{ github.workspace }}/wallet
+        DB_ALIAS: demodevopsapex
+        DB_USER: SABATH.GARCIA
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        SQLCL_DIR: ${{ github.workspace }}/sqlcl
