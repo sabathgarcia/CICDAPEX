@@ -39,5 +39,5 @@ jobs:
     - name: Run SQL script on Oracle ADB
       run: |
         export PATH=${SQLCL_DIR}/sqlcl/bin:$PATH
-        echo exit | sql -s "${DB_USER}/${DB_PASSWORD}@${DB_ALIAS}" @EMPLOYEES.sql
+        echo exit | sql -s ${DB_USER}/${DB_PASSWORD}@${DB_ALIAS} @EMPLOYEES.sql
       shell: bash
