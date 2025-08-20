@@ -11,7 +11,7 @@ jobs:
 
     env:
       TNS_ADMIN: ${{ github.workspace }}/wallet
-      DB_ALIAS: demodevopsapex
+      DB_ALIAS: demodevopsapex_high
       DB_USER: SABATH.GARCIA
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       SQLCL_DIR: ${{ github.workspace }}/sqlcl
